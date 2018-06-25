@@ -67,7 +67,7 @@ export default [
         iconURL: ev3Image,
         description: 'Build interactive robots and more.',
         featured: true,
-        disabled: true
+        disabled: false
     },
     {
         name: 'LEGO Boost',
