@@ -113,8 +113,8 @@ class ActionMenu extends React.Component {
                     [styles.forceHidden]: this.state.forceHide
                 })}
                 ref={this.setContainerRef}
-                onMouseEnter={this.handleToggleOpenState}
-                onMouseLeave={this.handleClosePopover}
+                // onMouseEnter={this.handleToggleOpenState}
+                // onMouseLeave={this.handleClosePopover}
             >
                 <button
                     aria-label={mainTitle}

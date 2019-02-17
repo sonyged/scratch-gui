@@ -18,6 +18,7 @@ const messages = defineMessages({
 const PreviewModal = ({intl, ...props}) => (
     <ReactModal
         isOpen
+        ariaHideApp={false}
         className={styles.modalContent}
         contentLabel={intl.formatMessage({...messages.label})}
         overlayClassName={styles.modalOverlay}
