@@ -15,6 +15,7 @@ import styles from './modal.css';
 const ModalComponent = props => (
     <ReactModal
         isOpen
+        ariaHideApp={false}
         className={classNames(styles.modalContent, props.className, {
             [styles.fullScreen]: props.fullScreen
         })}

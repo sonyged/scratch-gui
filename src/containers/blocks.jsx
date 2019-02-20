@@ -2,9 +2,12 @@ import bindAll from 'lodash.bindall';
 import debounce from 'lodash.debounce';
 import defaultsDeep from 'lodash.defaultsdeep';
 import makeToolboxXML from '../lib/make-toolbox-xml';
+import makeToolboxXMLHorizontal from '../lib/make-toolbox-xml-horizontal';
 import PropTypes from 'prop-types';
 import React from 'react';
 import VMScratchBlocks from '../lib/blocks';
+// import VMScratchBlocksHorizontal from '../lib/blocks-horizontal';
+import ScratchBlocksHorizontal from 'scratch-blocks/dist/horizontal';
 import VM from 'scratch-vm';
 
 import analytics from '../lib/analytics';
@@ -33,7 +36,11 @@ const addFunctionListener = (object, property, callback) => {
 class Blocks extends React.Component {
     constructor (props) {
         super(props);
-        this.ScratchBlocks = VMScratchBlocks(props.vm);
+        if (props.horizontal) {
+            this.ScratchBlocks = ScratchBlocksHorizontal;
+        } else {
+            this.ScratchBlocks = VMScratchBlocks(props.vm);
+        }
         bindAll(this, [
             'attachVM',
             'detachVM',
@@ -67,11 +74,9 @@ class Blocks extends React.Component {
         this.ScratchBlocks.FieldColourSlider.activateEyedropper_ = this.props.onActivateColorPicker;
         this.ScratchBlocks.Procedures.externalProcedureDefCallback = this.props.onActivateCustomProcedures;
 
-        const workspaceConfig = defaultsDeep({},
-            Blocks.defaultOptions,
-            this.props.options,
-            {toolbox: this.props.toolboxXML}
-        );
+        const workspaceConfig = defaultsDeep({}, Blocks.defaultOptions, this.props.options, {
+            toolbox: this.props.toolboxXML
+        });
         this.workspace = this.ScratchBlocks.inject(this.blocks, workspaceConfig);
 
         // we actually never want the workspace to enable "refresh toolbox" - this basically re-renders the
@@ -129,7 +134,8 @@ class Blocks extends React.Component {
         }
         // @todo hack to resize blockly manually in case resize happened while hidden
         // @todo hack to reload the workspace due to gui bug #413
-        if (this.props.isVisible) { // Scripts tab
+        if (this.props.isVisible) {
+            // Scripts tab
             this.workspace.setVisible(true);
             this.props.vm.refreshWorkspace();
             // Re-enable toolbox refreshes without causing one. See #updateToolbox for more info.
@@ -190,9 +196,7 @@ class Blocks extends React.Component {
 
     attachVM () {
         this.workspace.addChangeListener(this.props.vm.blockListener);
-        this.flyoutWorkspace = this.workspace
-            .getFlyout()
-            .getWorkspace();
+        this.flyoutWorkspace = this.workspace.getFlyout().getWorkspace();
         this.flyoutWorkspace.addChangeListener(this.props.vm.flyoutBlockListener);
         this.flyoutWorkspace.addChangeListener(this.props.vm.monitorBlockListener);
         this.props.vm.addListener('SCRIPT_GLOW_ON', this.onScriptGlowOn);
@@ -270,7 +274,9 @@ class Blocks extends React.Component {
         if (this.props.vm.editingTarget) {
             const target = this.props.vm.editingTarget;
             const dynamicBlocksXML = this.props.vm.runtime.getBlocksXML();
-            const toolboxXML = makeToolboxXML(target.isStage, target.id, dynamicBlocksXML);
+            const toolboxXML = this.props.horizontal ?
+                makeToolboxXMLHorizontal(target.isStage, target.id, dynamicBlocksXML) :
+                makeToolboxXML(target.isStage, target.id, dynamicBlocksXML);
             this.props.updateToolboxState(toolboxXML);
         }
 
@@ -320,10 +326,8 @@ class Blocks extends React.Component {
     }
     handlePromptStart (message, defaultValue, callback, optTitle, optVarType) {
         const p = {prompt: {callback, message, defaultValue}};
-        p.prompt.title = optTitle ? optTitle :
-            this.ScratchBlocks.VARIABLE_MODAL_TITLE;
-        p.prompt.showMoreOptions =
-            optVarType !== this.ScratchBlocks.BROADCAST_MESSAGE_VARIABLE_TYPE;
+        p.prompt.title = optTitle ? optTitle : this.ScratchBlocks.VARIABLE_MODAL_TITLE;
+        p.prompt.showMoreOptions = optVarType !== this.ScratchBlocks.BROADCAST_MESSAGE_VARIABLE_TYPE;
         this.setState(p);
     }
     handlePromptCallback (data) {
@@ -345,6 +349,7 @@ class Blocks extends React.Component {
             anyModalVisible,
             customProceduresVisible,
             extensionLibraryVisible,
+            horizontal,
             options,
             stageSize,
             vm,
@@ -398,6 +403,7 @@ Blocks.propTypes = {
     anyModalVisible: PropTypes.bool,
     customProceduresVisible: PropTypes.bool,
     extensionLibraryVisible: PropTypes.bool,
+    horizontal: PropTypes.bool,
     isVisible: PropTypes.bool,
     locale: PropTypes.string,
     messages: PropTypes.objectOf(PropTypes.string),
@@ -467,10 +473,9 @@ Blocks.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-    anyModalVisible: (
+    anyModalVisible:
         Object.keys(state.scratchGui.modals).some(key => state.scratchGui.modals[key]) ||
-        state.scratchGui.mode.isFullScreen
-    ),
+        state.scratchGui.mode.isFullScreen,
     extensionLibraryVisible: state.scratchGui.modals.extensionLibrary,
     locale: state.locales.locale,
     messages: state.locales.messages,

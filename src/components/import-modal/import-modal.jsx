@@ -31,6 +31,7 @@ const messages = defineMessages({
 const ImportModal = ({intl, ...props}) => (
     <ReactModal
         isOpen
+        ariaHideApp={false}
         className={styles.modalContent}
         contentLabel={intl.formatMessage({...messages.title})}
         overlayClassName={styles.modalOverlay}

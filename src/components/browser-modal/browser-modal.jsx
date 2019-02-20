@@ -17,6 +17,7 @@ const messages = defineMessages({
 const BrowserModal = ({intl, ...props}) => (
     <ReactModal
         isOpen
+        ariaHideApp={false}
         className={styles.modalContent}
         contentLabel={intl.formatMessage({...messages.label})}
         overlayClassName={styles.modalOverlay}
@@ -29,13 +30,13 @@ const BrowserModal = ({intl, ...props}) => (
                 <FormattedMessage {...messages.label} />
             </h2>
             <p>
-                { /* eslint-disable max-len */ }
+                {/* eslint-disable max-len */}
                 <FormattedMessage
                     defaultMessage="We're very sorry, but Scratch 3.0 does not support Internet Explorer, Vivaldi, Opera or Silk. We recommend trying a newer browser such as Google Chrome, Mozilla Firefox, or Microsoft Edge."
                     description="Unsupported browser description"
                     id="gui.unsupportedBrowser.description"
                 />
-                { /* eslint-enable max-len */ }
+                {/* eslint-enable max-len */}
             </p>
 
             <Box className={styles.buttonRow}>
@@ -49,7 +50,6 @@ const BrowserModal = ({intl, ...props}) => (
                         id="gui.unsupportedBrowser.back"
                     />
                 </button>
-
             </Box>
             <div className={styles.faqLinkText}>
                 <FormattedMessage

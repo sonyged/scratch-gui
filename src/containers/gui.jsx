@@ -3,27 +3,25 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import VM from 'scratch-vm';
 import {connect} from 'react-redux';
-import ReactModal from 'react-modal';
+// import ReactModal from 'react-modal';
 
 import ErrorBoundaryHOC from '../lib/error-boundary-hoc.jsx';
 import {openExtensionLibrary} from '../reducers/modals';
 import {
     activateTab,
     BLOCKS_TAB_INDEX,
-    COSTUMES_TAB_INDEX,
+    // COSTUMES_TAB_INDEX,
     SOUNDS_TAB_INDEX
 } from '../reducers/editor-tab';
 
-import {
-    closeCostumeLibrary,
-    closeBackdropLibrary
-} from '../reducers/modals';
+import {closeCostumeLibrary, closeBackdropLibrary} from '../reducers/modals';
 
 import ProjectLoaderHOC from '../lib/project-loader-hoc.jsx';
 import vmListenerHOC from '../lib/vm-listener-hoc.jsx';
 
 import GUIComponent from '../components/gui/gui.jsx';
 
+// assets path need matching with koov app assets directory
 class GUI extends React.Component {
     constructor (props) {
         super(props);
@@ -37,7 +35,8 @@ class GUI extends React.Component {
         if (this.props.vm.initialized) return;
         this.audioEngine = new AudioEngine();
         this.props.vm.attachAudioEngine(this.audioEngine);
-        this.props.vm.loadProject(this.props.projectData)
+        this.props.vm
+            .loadProject(this.props.projectData)
             .then(() => {
                 this.setState({loading: false}, () => {
                     this.props.vm.setCompatibilityMode(true);
@@ -54,7 +53,8 @@ class GUI extends React.Component {
     componentWillReceiveProps (nextProps) {
         if (this.props.projectData !== nextProps.projectData) {
             this.setState({loading: true}, () => {
-                this.props.vm.loadProject(nextProps.projectData)
+                this.props.vm
+                    .loadProject(nextProps.projectData)
                     .then(() => {
                         this.setState({loading: false});
                     })
@@ -72,7 +72,8 @@ class GUI extends React.Component {
     render () {
         if (this.state.loadingError) {
             throw new Error(
-                `Failed to load project from server [id=${window.location.hash}]: ${this.state.errorMessage}`);
+                `Failed to load project from server [id=${window.location.hash}]: ${this.state.errorMessage}`
+            );
         }
         const {
             children,
@@ -112,15 +113,14 @@ const mapStateToProps = state => ({
     blocksTabVisible: state.scratchGui.editorTab.activeTabIndex === BLOCKS_TAB_INDEX,
     cardsVisible: state.scratchGui.cards.visible,
     costumeLibraryVisible: state.scratchGui.modals.costumeLibrary,
-    costumesTabVisible: state.scratchGui.editorTab.activeTabIndex === COSTUMES_TAB_INDEX,
+    // costumesTabVisible: state.scratchGui.editorTab.activeTabIndex === COSTUMES_TAB_INDEX,
     importInfoVisible: state.scratchGui.modals.importInfo,
     isPlayerOnly: state.scratchGui.mode.isPlayerOnly,
     loadingStateVisible: state.scratchGui.modals.loadingProject,
     previewInfoVisible: state.scratchGui.modals.previewInfo,
-    targetIsStage: (
-        state.scratchGui.targets.stage &&
-        state.scratchGui.targets.stage.id === state.scratchGui.targets.editingTarget
-    ),
+    // targetIsStage:
+    // eslint-disable-next-line max-len
+    //     state.scratchGui.targets.stage && state.scratchGui.targets.stage.id === state.scratchGui.targets.editingTarget,
     soundsTabVisible: state.scratchGui.editorTab.activeTabIndex === SOUNDS_TAB_INDEX,
     tipsLibraryVisible: state.scratchGui.modals.tipsLibrary
 });
@@ -128,7 +128,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     onExtensionButtonClick: () => dispatch(openExtensionLibrary()),
     onActivateTab: tab => dispatch(activateTab(tab)),
-    onActivateCostumesTab: () => dispatch(activateTab(COSTUMES_TAB_INDEX)),
+    // onActivateCostumesTab: () => dispatch(activateTab(COSTUMES_TAB_INDEX)),
     onActivateSoundsTab: () => dispatch(activateTab(SOUNDS_TAB_INDEX)),
     onRequestCloseBackdropLibrary: () => dispatch(closeBackdropLibrary()),
     onRequestCloseCostumeLibrary: () => dispatch(closeCostumeLibrary())
@@ -136,12 +136,10 @@ const mapDispatchToProps = dispatch => ({
 
 const ConnectedGUI = connect(
     mapStateToProps,
-    mapDispatchToProps,
+    mapDispatchToProps
 )(GUI);
 
-const WrappedGui = ErrorBoundaryHOC('Top Level App')(
-    ProjectLoaderHOC(vmListenerHOC(ConnectedGUI))
-);
+const WrappedGui = ErrorBoundaryHOC('Top Level App')(ProjectLoaderHOC(vmListenerHOC(ConnectedGUI)));
 
-WrappedGui.setAppElement = ReactModal.setAppElement;
+// WrappedGui.setAppElement = ReactModal.setAppElement;
 export default WrappedGui;

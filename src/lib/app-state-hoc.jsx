@@ -11,7 +11,7 @@ import {setPlayer, setFullScreen} from '../reducers/mode.js';
 
 import {ScratchPaintReducer} from 'scratch-paint';
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({trace: true}) || compose;
 const enhancer = composeEnhancers(guiMiddleware);
 
 /*
@@ -33,8 +33,7 @@ const AppStateHOC = function (WrappedComponent) {
             }
 
             let initializedLocales = localesInitialState;
-            if (window.location.search.indexOf('locale=') !== -1 ||
-                window.location.search.indexOf('lang=') !== -1) {
+            if (window.location.search.indexOf('locale=') !== -1 || window.location.search.indexOf('lang=') !== -1) {
                 const locale = window.location.search.match(/(?:locale|lang)=([\w]+)/)[1];
                 initializedLocales = initLocale(initializedLocales, locale);
             }
@@ -50,7 +49,8 @@ const AppStateHOC = function (WrappedComponent) {
                     locales: initializedLocales,
                     scratchGui: initializedGui
                 },
-                enhancer);
+                enhancer
+            );
         }
         componentDidUpdate (prevProps) {
             if (prevProps.isPlayerOnly !== this.props.isPlayerOnly) {

@@ -32,52 +32,65 @@ const base = {
         symlinks: false
     },
     module: {
-        rules: [{
-            test: /\.jsx?$/,
-            loader: 'babel-loader',
-            include: [path.resolve(__dirname, 'src'), /node_modules[\\/]scratch-[^\\/]+[\\/]src/],
-            options: {
-                // Explicitly disable babelrc so we don't catch various config
-                // in much lower dependencies.
-                babelrc: false,
-                plugins: [
-                    'syntax-dynamic-import',
-                    'transform-async-to-generator',
-                    'transform-object-rest-spread',
-                    ['react-intl', {
-                        messagesDir: './translations/messages/'
-                    }]],
-                presets: [['env', {targets: {browsers: ['last 3 versions', 'Safari >= 8', 'iOS >= 8']}}], 'react']
-            }
-        },
-        {
-            test: /\.css$/,
-            use: [{
-                loader: 'style-loader'
-            }, {
-                loader: 'css-loader',
+        rules: [
+            {
+                test: /\.jsx?$/,
+                loader: 'babel-loader',
+                include: [path.resolve(__dirname, 'src'), /node_modules[\\/]scratch-[^\\/]+[\\/]src/],
                 options: {
-                    modules: true,
-                    importLoaders: 1,
-                    localIdentName: '[name]_[local]_[hash:base64:5]',
-                    camelCase: true
+                    // Explicitly disable babelrc so we don't catch various config
+                    // in much lower dependencies.
+                    babelrc: false,
+                    plugins: [
+                        'syntax-dynamic-import',
+                        'transform-async-to-generator',
+                        'transform-object-rest-spread',
+                        [
+                            'react-intl',
+                            {
+                                messagesDir: './translations/messages/'
+                            }
+                        ]
+                    ],
+                    presets: [
+                        ['env', {targets: {browsers: ['last 3 versions', 'Safari >= 8', 'iOS >= 8']}}],
+                        'react'
+                    ]
                 }
-            }, {
-                loader: 'postcss-loader',
-                options: {
-                    ident: 'postcss',
-                    plugins: function () {
-                        return [
-                            postcssImport,
-                            postcssVars,
-                            autoprefixer({
-                                browsers: ['last 3 versions', 'Safari >= 8', 'iOS >= 8']
-                            })
-                        ];
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    {
+                        loader: 'style-loader'
+                    },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            modules: true,
+                            importLoaders: 1,
+                            localIdentName: '[name]_[local]_[hash:base64:5]',
+                            camelCase: true
+                        }
+                    },
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            ident: 'postcss',
+                            plugins: function () {
+                                return [
+                                    postcssImport,
+                                    postcssVars,
+                                    autoprefixer({
+                                        browsers: ['last 3 versions', 'Safari >= 8', 'iOS >= 8']
+                                    })
+                                ];
+                            }
+                        }
                     }
-                }
-            }]
-        }]
+                ]
+            }
+        ]
     },
     optimization: {
         minimizer: [
@@ -97,7 +110,8 @@ module.exports = [
             'gui': './src/playground/index.jsx',
             'blocksonly': './src/playground/blocks-only.jsx',
             'compatibilitytesting': './src/playground/compatibility-testing.jsx',
-            'player': './src/playground/player.jsx'
+            'player': './src/playground/player.jsx',
+            'koov-gui': './src/playground/_render-koov-gui.jsx'
         },
         output: {
             path: path.resolve(__dirname, 'build'),
@@ -157,32 +171,46 @@ module.exports = [
                 filename: 'player.html',
                 title: 'Scratch 3.0 GUI: Player Example'
             }),
-            new CopyWebpackPlugin([{
-                from: 'static',
-                to: 'static'
-            }]),
-            new CopyWebpackPlugin([{
-                from: 'node_modules/scratch-blocks/media',
-                to: 'static/blocks-media'
-            }]),
-            new CopyWebpackPlugin([{
-                from: 'extensions/**',
-                to: 'static',
-                context: 'src/examples'
-            }]),
-            new CopyWebpackPlugin([{
-                from: 'extension-worker.{js,js.map}',
-                context: 'node_modules/scratch-vm/dist/web'
-            }])
+            new HtmlWebpackPlugin({
+                chunks: ['lib.min', 'koov-gui'],
+                template: 'src/playground/index.ejs',
+                filename: 'koov-gui.html',
+                title: 'Scratch 3.0 GUI: Player Example'
+            }),
+            new CopyWebpackPlugin([
+                {
+                    from: 'static',
+                    to: 'static'
+                }
+            ]),
+            new CopyWebpackPlugin([
+                {
+                    from: 'node_modules/scratch-blocks/media',
+                    to: 'static/blocks-media'
+                }
+            ]),
+            new CopyWebpackPlugin([
+                {
+                    from: 'extensions/**',
+                    to: 'static',
+                    context: 'src/examples'
+                }
+            ]),
+            new CopyWebpackPlugin([
+                {
+                    from: 'extension-worker.{js,js.map}',
+                    context: 'node_modules/scratch-vm/dist/web'
+                }
+            ])
         ])
     })
 ].concat(
-    process.env.NODE_ENV === 'production' ? (
-        // export as library
+    process.env.NODE_ENV === 'production' || process.env.BUILD_MODE === 'dist' ? // export as library
         defaultsDeep({}, base, {
             target: 'web',
             entry: {
-                'scratch-gui': './src/index.js'
+                'scratch-gui': './src/index.js',
+                'koov-gui': './src/playground/koov-gui.jsx'
             },
             output: {
                 libraryTarget: 'umd',
@@ -199,20 +227,25 @@ module.exports = [
                         loader: 'file-loader',
                         options: {
                             outputPath: 'static/assets/',
-                            publicPath: '/static/assets/'
+                            publicPath: '/assets/scratch/assets'
                         }
                     }
                 ])
             },
             plugins: base.plugins.concat([
-                new CopyWebpackPlugin([{
-                    from: 'node_modules/scratch-blocks/media',
-                    to: 'static/blocks-media'
-                }]),
-                new CopyWebpackPlugin([{
-                    from: 'extension-worker.{js,js.map}',
-                    context: 'node_modules/scratch-vm/dist/web'
-                }])
+                new CopyWebpackPlugin([
+                    {
+                        from: 'node_modules/scratch-blocks/media',
+                        to: 'static/blocks-media'
+                    }
+                ]),
+                new CopyWebpackPlugin([
+                    {
+                        from: 'extension-worker.{js,js.map}',
+                        context: 'node_modules/scratch-vm/dist/web'
+                    }
+                ])
             ])
-        })) : []
+        }) :
+        []
 );

@@ -17,6 +17,7 @@ const messages = defineMessages({
 const WebGlModal = ({intl, ...props}) => (
     <ReactModal
         isOpen
+        ariaHideApp={false}
         className={styles.modalContent}
         contentLabel={intl.formatMessage({...messages.label})}
         overlayClassName={styles.modalOverlay}
