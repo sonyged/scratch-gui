@@ -2,10 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Provider} from 'react-redux';
 import {createStore, combineReducers, compose} from 'redux';
-import ConnectedIntlProvider from './connected-intl-provider.jsx';
+import editorMessages from 'scratch-l10n/locales/editor-msgs';
 
+import ConnectedIntlProvider from './connected-intl-provider.jsx';
 import guiReducer, {guiInitialState, guiMiddleware, initFullScreen, initPlayer} from '../reducers/gui';
-import localesReducer, {initLocale, localesInitialState} from '../reducers/locales';
+import localesReducer, {
+    initLocale
+    // localesInitialState
+} from '../reducers/locales';
 
 import {setPlayer, setFullScreen} from '../reducers/mode.js';
 
@@ -32,7 +36,30 @@ const AppStateHOC = function (WrappedComponent) {
                 initializedGui = initPlayer(initializedGui);
             }
 
-            let initializedLocales = localesInitialState;
+            // let initializedLocales = localesInitialState;
+            // initial locale getting from KOOV-app via props
+            let programLocale = '';
+            let koovLocale = '';
+
+            if (props.programLocale === 'zh') {
+                programLocale = 'zh-cn';
+            } else {
+                programLocale = props.programLocale;
+            }
+
+            if (props.locale === 'ja-furigana') {
+                koovLocale = 'ja';
+            } else if (props.locale === 'zh') {
+                koovLocale = 'zh-cn';
+            } else {
+                koovLocale = props.locale;
+            }
+
+            let initializedLocales = {
+                locale: programLocale ? programLocale : 'en',
+                messagesByLocale: editorMessages,
+                messages: koovLocale ? editorMessages[koovLocale] : editorMessages.en
+            };
             if (window.location.search.indexOf('locale=') !== -1 || window.location.search.indexOf('lang=') !== -1) {
                 const locale = window.location.search.match(/(?:locale|lang)=([\w]+)/)[1];
                 initializedLocales = initLocale(initializedLocales, locale);
@@ -64,6 +91,8 @@ const AppStateHOC = function (WrappedComponent) {
             const {
                 isFullScreen, // eslint-disable-line no-unused-vars
                 isPlayerOnly, // eslint-disable-line no-unused-vars
+                locale, // eslint-disable-line no-unused-vars
+                programLocale, // eslint-disable-line no-unused-vars
                 ...componentProps
             } = this.props;
             return (
@@ -77,7 +106,9 @@ const AppStateHOC = function (WrappedComponent) {
     }
     AppStateWrapper.propTypes = {
         isFullScreen: PropTypes.bool,
-        isPlayerOnly: PropTypes.bool
+        isPlayerOnly: PropTypes.bool,
+        locale: PropTypes.string,
+        programLocale: PropTypes.string
     };
     return AppStateWrapper;
 };

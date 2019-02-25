@@ -53,7 +53,7 @@ let isRendererSupported = null;
 const GUIComponent = props => {
     const {
         activeTabIndex,
-        // basePath,
+        basePath, // eslint-disable-line no-unused-vars
         backdropLibraryVisible,
         backpackOptions,
         blocksTabVisible,
@@ -201,7 +201,7 @@ const GUIComponent = props => {
                                                     isVisible={blocksTabVisible}
                                                     options={{
                                                         // use this path when development in local
-                                                        // media: `${basePath}static/blocks-media/`,
+                                                        // media: `${basePath}static/blocks-media/`
                                                         media: '/assets/scratch/blocks-media/'
                                                     }}
                                                     stageSize={stageSize}
@@ -262,7 +262,7 @@ GUIComponent.propTypes = {
         host: PropTypes.string,
         visible: PropTypes.bool
     }),
-    // basePath: PropTypes.string,
+    basePath: PropTypes.string,
     blocksTabVisible: PropTypes.bool,
     cardsVisible: PropTypes.bool,
     children: PropTypes.node,
@@ -293,7 +293,7 @@ GUIComponent.defaultProps = {
         host: null,
         visible: false
     },
-    // basePath: './',
+    basePath: './',
     stageSizeMode: STAGE_SIZE_MODES.large
 };
 

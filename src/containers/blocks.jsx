@@ -451,16 +451,17 @@ Blocks.defaultOptions = {
         colour: '#ddd'
     },
     colours: {
-        workspace: '#F9F9F9',
-        flyout: '#F9F9F9',
-        toolbox: '#FFFFFF',
-        toolboxSelected: '#E9EEF2',
-        scrollbar: '#CECDCE',
-        scrollbarHover: '#CECDCE',
-        insertionMarker: '#000000',
-        insertionMarkerOpacity: 0.2,
-        fieldShadow: 'rgba(255, 255, 255, 0.3)',
-        dragShadowOpacity: 0.6
+        // This line cause bug: goog is not defined on horizon blocks
+        // workspace: '#F9F9F9',
+        // flyout: '#F9F9F9',
+        // toolbox: '#FFFFFF',
+        // toolboxSelected: '#E9EEF2',
+        // scrollbar: '#CECDCE',
+        // scrollbarHover: '#CECDCE',
+        // insertionMarker: '#000000',
+        // insertionMarkerOpacity: 0.2,
+        // fieldShadow: 'rgba(255, 255, 255, 0.3)',
+        // dragShadowOpacity: 0.6
     },
     comments: true,
     collapse: false,
