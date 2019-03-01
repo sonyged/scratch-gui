@@ -39,7 +39,7 @@ const AppStateHOC = function (WrappedComponent) {
             // let initializedLocales = localesInitialState;
             // initial locale getting from KOOV-app via props
             let programLocale = '';
-            let koovLocale = '';
+            // let koovLocale = '';
 
             if (props.programLocale === 'zh') {
                 programLocale = 'zh-cn';
@@ -47,18 +47,18 @@ const AppStateHOC = function (WrappedComponent) {
                 programLocale = props.programLocale;
             }
 
-            if (props.locale === 'ja-furigana') {
-                koovLocale = 'ja';
-            } else if (props.locale === 'zh') {
-                koovLocale = 'zh-cn';
-            } else {
-                koovLocale = props.locale;
-            }
+            // if (props.locale === 'ja-furigana') {
+            //     koovLocale = 'ja';
+            // } else if (props.locale === 'zh') {
+            //     koovLocale = 'zh-cn';
+            // } else {
+            //     koovLocale = props.locale;
+            // }
 
             let initializedLocales = {
                 locale: programLocale ? programLocale : 'en',
                 messagesByLocale: editorMessages,
-                messages: koovLocale ? editorMessages[koovLocale] : editorMessages.en
+                messages: programLocale ? editorMessages[programLocale] : editorMessages.en
             };
             if (window.location.search.indexOf('locale=') !== -1 || window.location.search.indexOf('lang=') !== -1) {
                 const locale = window.location.search.match(/(?:locale|lang)=([\w]+)/)[1];
