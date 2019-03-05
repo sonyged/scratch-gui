@@ -15,6 +15,7 @@ const Selector = props => {
         buttons,
         containerRef,
         dragType,
+        isRtl,
         items,
         selectedItemIndex,
         draggingIndex,
@@ -24,6 +25,7 @@ const Selector = props => {
         onRemoveSortable,
         onDeleteClick,
         onDuplicateClick,
+        onExportClick,
         onItemClick
     } = props;
 
@@ -40,6 +42,7 @@ const Selector = props => {
                     img={img}
                     moreButtons={moreButtons}
                     title={title}
+                    tooltipPlace={isRtl ? 'left' : 'right'}
                     onClick={onClick}
                 />
             </Box>
@@ -61,12 +64,13 @@ const Selector = props => {
                         onRemoveSortable={onRemoveSortable}
                     >
                         <SpriteSelectorItem
-                            assetId={item.assetId}
+                            asset={item.asset}
                             className={classNames(styles.listItem, {
                                 [styles.placeholder]: isRelevantDrag && index === draggingIndex
                             })}
                             costumeURL={item.url}
                             details={item.details}
+                            dragPayload={item.dragPayload}
                             dragType={dragType}
                             id={index}
                             index={index}
@@ -76,6 +80,7 @@ const Selector = props => {
                             onClick={onItemClick}
                             onDeleteButtonClick={onDeleteClick}
                             onDuplicateButtonClick={onDuplicateClick}
+                            onExportButtonClick={onExportClick}
                         />
                     </SortableAsset>
                 ))}
@@ -95,6 +100,7 @@ Selector.propTypes = {
     dragType: PropTypes.oneOf(Object.keys(DragConstants)),
     draggingIndex: PropTypes.number,
     draggingType: PropTypes.oneOf(Object.keys(DragConstants)),
+    isRtl: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape({
         url: PropTypes.string,
         name: PropTypes.string.isRequired
@@ -102,6 +108,7 @@ Selector.propTypes = {
     onAddSortable: PropTypes.func,
     onDeleteClick: PropTypes.func,
     onDuplicateClick: PropTypes.func,
+    onExportClick: PropTypes.func,
     onItemClick: PropTypes.func.isRequired,
     onRemoveSortable: PropTypes.func,
     ordering: PropTypes.arrayOf(PropTypes.number),
