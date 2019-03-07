@@ -1,7 +1,7 @@
 import React from 'react';
 import {render} from 'react-dom';
 
-import App from './scratchjr-koov-gui.jsx';
+import App from './scratch-koov-gui.jsx';
 import styles from './index.css';
 
 const appTarget = document.createElement('div');
