@@ -68,7 +68,7 @@ export default [
         iconURL: koovImage,
         description: 'Play with your KOOV.',
         featured: true,
-        disabled: true
+        disabled: false
     },
     {
         name: 'LEGO MINDSTORMS EV3',
