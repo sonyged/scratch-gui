@@ -4,6 +4,7 @@ import videoImage from './video-sensing.png';
 import speechImage from './speech.png';
 import microbitImage from './microbit.png';
 import wedoImage from './wedo.png';
+import koovImage from './koov.png';
 import ev3Image from './ev3.png';
 import boostImage from './boost.png';
 import translateImage from './translate.png';
@@ -60,6 +61,14 @@ export default [
         description: 'Build with motors and sensors.',
         featured: true,
         disabled: true
+    },
+    {
+        name: 'KOOV',
+        extensionId: 'koov',
+        iconURL: koovImage,
+        description: 'Play with your KOOV.',
+        featured: true,
+        disabled: false
     },
     {
         name: 'LEGO MINDSTORMS EV3',
