@@ -10,7 +10,7 @@ import {openExtensionLibrary} from '../reducers/modals';
 import {
     activateTab,
     BLOCKS_TAB_INDEX,
-    // COSTUMES_TAB_INDEX,
+    COSTUMES_TAB_INDEX,
     SOUNDS_TAB_INDEX
 } from '../reducers/editor-tab';
 
@@ -113,7 +113,7 @@ const mapStateToProps = state => ({
     blocksTabVisible: state.scratchGui.editorTab.activeTabIndex === BLOCKS_TAB_INDEX,
     cardsVisible: state.scratchGui.cards.visible,
     costumeLibraryVisible: state.scratchGui.modals.costumeLibrary,
-    // costumesTabVisible: state.scratchGui.editorTab.activeTabIndex === COSTUMES_TAB_INDEX,
+    costumesTabVisible: state.scratchGui.editorTab.activeTabIndex === COSTUMES_TAB_INDEX,
     importInfoVisible: state.scratchGui.modals.importInfo,
     isPlayerOnly: state.scratchGui.mode.isPlayerOnly,
     loadingStateVisible: state.scratchGui.modals.loadingProject,
@@ -128,7 +128,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     onExtensionButtonClick: () => dispatch(openExtensionLibrary()),
     onActivateTab: tab => dispatch(activateTab(tab)),
-    // onActivateCostumesTab: () => dispatch(activateTab(COSTUMES_TAB_INDEX)),
+    onActivateCostumesTab: () => dispatch(activateTab(COSTUMES_TAB_INDEX)),
     onActivateSoundsTab: () => dispatch(activateTab(SOUNDS_TAB_INDEX)),
     onRequestCloseBackdropLibrary: () => dispatch(closeBackdropLibrary()),
     onRequestCloseCostumeLibrary: () => dispatch(closeCostumeLibrary())
