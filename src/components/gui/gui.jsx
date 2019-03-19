@@ -11,7 +11,7 @@ import VM from 'scratch-vm';
 import Renderer from 'scratch-render';
 
 import Blocks from '../../containers/blocks.jsx';
-// import CostumeTab from '../../containers/costume-tab.jsx';
+import CostumeTab from '../../containers/costume-tab.jsx';
 import TargetPane from '../../containers/target-pane.jsx';
 import SoundTab from '../../containers/sound-tab.jsx';
 import StageWrapper from '../../containers/stage-wrapper.jsx';
@@ -35,7 +35,7 @@ import {resolveStageSize} from '../../lib/screen-utils';
 import styles from './gui.css';
 import addExtensionIcon from './icon--extensions.svg';
 import codeIcon from './icon--code.svg';
-// import costumesIcon from './icon--costumes.svg';
+import costumesIcon from './icon--costumes.svg';
 import soundsIcon from './icon--sounds.svg';
 
 const messages = defineMessages({
@@ -60,7 +60,7 @@ const GUIComponent = props => {
         cardsVisible,
         children,
         costumeLibraryVisible,
-        // costumesTabVisible,
+        costumesTabVisible,
         // enableCommunity,
         horizontal,
         importInfoVisible,
@@ -68,13 +68,13 @@ const GUIComponent = props => {
         isPlayerOnly,
         loading,
         onExtensionButtonClick,
-        // onActivateCostumesTab,
+        onActivateCostumesTab,
         onActivateSoundsTab,
         onActivateTab,
         onRequestCloseBackdropLibrary,
         onRequestCloseCostumeLibrary,
         previewInfoVisible,
-        // targetIsStage,
+        targetIsStage,
         soundsTabVisible,
         stageSizeMode,
         tipsLibraryVisible,
@@ -156,7 +156,7 @@ const GUIComponent = props => {
                                                     id="gui.gui.codeTab"
                                                 />
                                             </Tab>
-                                            {/* <Tab
+                                            <Tab
                                                 className={tabClassNames.tab}
                                                 onClick={onActivateCostumesTab}
                                             >
@@ -177,7 +177,7 @@ const GUIComponent = props => {
                                                         id="gui.gui.costumesTab"
                                                     />
                                                 )}
-                                            </Tab> */}
+                                            </Tab>
                                             <Tab
                                                 className={tabClassNames.tab}
                                                 onClick={onActivateSoundsTab}
@@ -222,9 +222,9 @@ const GUIComponent = props => {
                                                 </button>
                                             </Box>
                                         </TabPanel>
-                                        {/* <TabPanel className={tabClassNames.tabPanel}>
+                                        <TabPanel className={tabClassNames.tabPanel}>
                                             {costumesTabVisible ? <CostumeTab vm={vm} /> : null}
-                                        </TabPanel> */}
+                                        </TabPanel>
                                         <TabPanel className={tabClassNames.tabPanel}>
                                             {soundsTabVisible ? <SoundTab vm={vm} /> : null}
                                         </TabPanel>
