@@ -1,6 +1,6 @@
 {
     "name": "@sonyged/scratch-gui",
-    "version": "3.6.1001",
+    "version": "3.6.1002",
     "description": "Graphical User Interface for creating and running Scratch 3.0 projects",
     "author": "Massachusetts Institute of Technology",
     "license": "BSD-3-Clause",
